@@ -1,0 +1,91 @@
+
+let dialogContent = `
+  <p>Choose the step to roll:</p>
+  <div style="display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between;">
+      <button data-action="1d4x-2">1</button>
+      <button data-action="1d4x-1">2</button>
+      <button data-action="1d4x">3</button>
+      <button data-action="1d6x">4</button>
+      <button data-action="1d8x">5</button>
+      <button data-action="1d10x">6</button>
+      <button data-action="1d12x">7</button>
+      <button data-action="2d6x">8</button>
+      <button data-action="1d8x+1d6x">9</button>
+      <button data-action="2d8x">10</button>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <button data-action="1d10x+1d8x">11</button>
+      <button data-action="2d10x">12</button>
+      <button data-action="1d12x+1d10x">13</button>
+      <button data-action="2d12x">14</button>
+      <button data-action="1d12x+2d6x">15</button>
+      <button data-action="1d12x+1d8x+1d6x">16</button>
+      <button data-action="1d12x+2d8x">17</button>
+      <button data-action="1d12x+1d10x+1d8x">18</button>
+      <button data-action="1d20x+2d6x">19</button>
+      <button data-action="1d20x+1d8x+1d6x">20</button>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <button data-action="1d20x+2d8x">21</button>
+      <button data-action="1d20x+1d10x+1d8x">22</button>
+      <button data-action="1d20x+2d10x">23</button>
+      <button data-action="1d20x+1d12x+1d10x">24</button>
+      <button data-action="1d20x+2d12x">25</button>
+      <button data-action="1d20x+1d12x+2d6x">26</button>
+      <button data-action="1d20x+1d12x+1d8x+1d6x">27</button>
+      <button data-action="1d20x+1d12x+2d8x">28</button>
+      <button data-action="1d20x+1d12x+1d10x+1d8x">29</button>
+      <button data-action="2d20x+2d6x">30</button>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <button data-action="2d20x+1d8x+1d6x">31</button>
+      <button data-action="2d20x+2d8x">32</button>
+      <button data-action="2d20x+1d10x+1d8x">33</button>
+      <button data-action="2d20x+2d10x">34</button>
+      <button data-action="2d20x+1d12x+1d10x">35</button>
+      <button data-action="2d20x+2d12x">36</button>
+      <button data-action="2d20x+1d12x+2d6x">37</button>
+      <button data-action="2d20x+1d12x+1d8x+1d6x">38</button>
+      <button data-action="2d20x+1d12x+2d8x">39</button>
+      <button data-action="2d20x+1d12x+1d10x+1d8x">40</button>
+    </div>
+    
+  </div>
+`;
+
+new Dialog({
+  title: "Roll Dice",
+  content: dialogContent,
+  buttons: {},
+  default: "20",
+  close: () => {},
+  render: html => {
+    let quantity = 1;
+    html.find(".macro-quantity").click(ev => {
+      //ev.preventDefault();
+      let input = html.find("input.macro-quantity");
+      let val = parseInt(input.val());
+      let mod = parseInt(ev.currentTarget.dataset.modifier);
+      if (!isNaN(val) && !isNaN(mod)) {
+        val = Math.max(val + mod, 1);
+        quantity = val;
+        input.val(val);
+      }
+    });
+
+  html.find("button[data-action]").click(async ev => {
+	let dice = ev.currentTarget.dataset.action;
+	let roll = await new Roll(`${dice}`).evaluate({
+		async: true
+	});
+	ChatMessage.create({
+		user: game.user._id,
+		speaker: ChatMessage.getSpeaker(),
+		content: roll.total,
+		type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+		roll
+	});
+    });
+  }
+}).render(true);
