@@ -85,30 +85,31 @@ new Dialog({
         }
     
         if (! isNaN(gpAward) && ! isNaN(spAward) && ! isNaN(cpAward)) {
-    
-          let consoleLogString = "<p><strong>Coin award!</strong> (" + gpAward + " GP, " + spAward + " SP, " + cpAward + " CP)</p><p>Given to:</p><ul>";
-          
-          //TODO: update the award message if split flag set
-          tokens.forEach(token => { 
-            consoleLogString = consoleLogString + "<li>" + token.name + "</li>";
-            console.log("GP was: " + token.actor.getRollData().money.gold + ", SP: " + token.actor.getRollData().money.silver + ", CP: " + token.actor.getRollData().money.copper);
-    
-            token.actor.getRollData().money.gold = parseInt(token.actor.getRollData().money.gold) + gpAward;
-            token.actor.getRollData().money.silver = parseInt(token.actor.getRollData().money.silver) + spAward;
-            token.actor.getRollData().money.copper = parseInt(token.actor.getRollData().money.copper) + cpAward;
-    
-            console.log("GP now: " + token.actor.getRollData().money.gold + ", SP: " + token.actor.getRollData().money.silver);
-          });
-          consoleLogString = consoleLogString + "</ul>";
-          
-          console.log(consoleLogString);
-          
-          let chatData = {
-            user: game.user._id,
-            speaker: "Gamemaster",
-            content: consoleLogString
-          };
-          ChatMessage.create(chatData, {});
+          if (gpAward > 0 && spAward > 0 && cpAward > 0) {
+            let consoleLogString = "<p><strong>Coin award!</strong> (" + gpAward + " GP, " + spAward + " SP, " + cpAward + " CP)</p><p>Given to:</p><ul>";
+            
+            //TODO: update the award message if split flag set
+            tokens.forEach(token => { 
+              consoleLogString = consoleLogString + "<li>" + token.name + "</li>";
+              console.log("GP was: " + token.actor.getRollData().money.gold + ", SP: " + token.actor.getRollData().money.silver + ", CP: " + token.actor.getRollData().money.copper);
+      
+              token.actor.getRollData().money.gold = parseInt(token.actor.getRollData().money.gold) + gpAward;
+              token.actor.getRollData().money.silver = parseInt(token.actor.getRollData().money.silver) + spAward;
+              token.actor.getRollData().money.copper = parseInt(token.actor.getRollData().money.copper) + cpAward;
+      
+              console.log("GP now: " + token.actor.getRollData().money.gold + ", SP: " + token.actor.getRollData().money.silver);
+            });
+            consoleLogString = consoleLogString + "</ul>";
+            
+            console.log(consoleLogString);
+            
+            let chatData = {
+              user: game.user._id,
+              speaker: "Gamemaster",
+              content: consoleLogString
+            };
+            ChatMessage.create(chatData, {});
+          }
         }
       }
     }

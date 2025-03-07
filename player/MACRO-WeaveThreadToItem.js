@@ -168,7 +168,7 @@ async function main() {
 
   	
 	let threadWeavingInfo = {};
-  	//let actorTIOptions = "";
+  	let actorTIOptions = "";
   	//let actorsThreadItems = "<ul>";//
   	let actorsThreadItems = "<ul><li class='flexrow lihead'><section class='flex0'></section><section class='flex2'><strong>Name</strong></section><section class='flex1'>Tier</section><section class='flex1'>Threads</section><section class='flex2'>Cost</section></li>"
 
@@ -181,7 +181,7 @@ async function main() {
 		}
 		threadWeavingInfo[threadItems[i]._id] = getThreadWeavingInfo(threadItems[i]._id);
 
-		//actorTIOptions += `<option value="${threadItems[i].name}" ${(threadWeavingInfo[threadItems[i]._id].currentlyCanWeave?"":"disabled")}>${threadItems[i].name}</option>`;
+		actorTIOptions += `<option value="${threadItems[i].name}" ${(threadWeavingInfo[threadItems[i]._id].currentlyCanWeave?"":"disabled")}>${threadItems[i].name}</option>`;
 		actorsThreadItems += `<li class="flexrow"><img class="flex0" src="${threadItems[i].img}" width="30" height="30"/>`
 		actorsThreadItems += `<section class="flex2">${threadItems[i].name}</section>`
 		actorsThreadItems += `<section class="flex1">${threadWeavingInfo[threadItems[i]._id].itemTierAbbrev}</section>`
@@ -204,7 +204,7 @@ async function main() {
 		currentWeaveString = `Weaving a Rank ${threadWeavingInfo[itemChosen].nextThreadRank} Thread to ${threadWeavingInfo[itemChosen].itemName}, costing ${threadWeavingInfo[itemChosen].nextThreadLPCost} LP.`;
   	} else {
   		ui.notifications.warn("Selected token does not appear to have any suitable Thread Items.");
-	}
+  	}
 
 	let choices = threadItems.filter((ti) => threadWeavingInfo[ti._id].currentlyCanWeave).reduce((acc, ti) => {
 	    acc[ti._id] = ti.name;
@@ -278,6 +278,23 @@ async function main() {
       	}
 
 	})
+
+	d.addEventListener("render", () => {
+		console.log("MACRO: " + _MACRONAME + "() " + actor.name + " in render callback.");
+	    const html = d.element;
+	    html.querySelector("[name=item]").addEventListener("change", (event) => {
+	    	console.log("MACRO: " + _MACRONAME + "() " + actor.name + " in event listener.");
+	        const select = html.querySelector("[name=item]");
+	        itemChosenFlag = true;
+	        console.log("MACRO: " + _MACRONAME + "() " + actor.name + " weaving thread to " + select.value);
+	        itemChosen = select.value;
+
+	        html.querySelector("[id=fillMeUp]").innerHTML = `Weaving a Rank ${threadWeavingInfo[itemChosen].nextThreadRank} Thread to ${threadWeavingInfo[itemChosen].itemName}, costing ${threadWeavingInfo[itemChosen].nextThreadLPCost} LP.`;
+
+    	});
+    //html.querySelectorAll(".form-footer > button").forEach(e => e.style["min-width"] = "133px");
+});
+
 
 	d.render(true);
 
