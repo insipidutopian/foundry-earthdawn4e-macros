@@ -292,8 +292,7 @@ async function main() {
 	        html.querySelector("[id=fillMeUp]").innerHTML = `Weaving a Rank ${threadWeavingInfo[itemChosen].nextThreadRank} Thread to ${threadWeavingInfo[itemChosen].itemName}, costing ${threadWeavingInfo[itemChosen].nextThreadLPCost} LP.`;
 
     	});
-    //html.querySelectorAll(".form-footer > button").forEach(e => e.style["min-width"] = "133px");
-});
+	});
 
 
 	d.render(true);

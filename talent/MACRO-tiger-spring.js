@@ -1,4 +1,4 @@
-const _MACRONAME = "Template"
+const _MACRONAME = "Tiger Spring"
 main()
 
 function main() {
@@ -7,14 +7,36 @@ function main() {
 		return ui.notifications.error("Please select a single token");
 	}
 
-	let targets = getTargets(2);
-	if (!targets) {
-		return ui.notifications.error("Please target at exactly one token");
-	} else {
-		for (target in targets) {
-			console.log("MACRO: " + _MACRONAME + "() target: " + targets[target].name);
-		}
+	let tigerSpringTalent = getTalentByName(actor, 'tiger spring');
+
+	if (!tigerSpringTalent) {
+		return ui.notifications.error("Selected token actor does not have the " + _MACRONAME + " talent.");
 	}
+
+	console.log("MACRO: " + _MACRONAME + "()Selected actor has " + _MACRONAME + " talent at rank: " + tigerSpringTalent.system.ranks);
+
+
+	const parameters = {
+					actorId: actor.id,
+					roll: 'talent',
+					attribute: 'strengthStep',
+        			rolltype: 'initiative',
+			        itemID: tigerSpringTalent._id,
+			        talent: tigerSpringTalent.name,
+			        talentID: tigerSpringTalent._id,
+			        difficulty: 0,
+			        karma: 1
+			    };
+
+	let results = actor.rollPrep(parameters);
+    // listen for renderChatMessage to get the result
+    const myHookId = Hooks.on("renderChatMessage", (message, i, d) => {
+    	if (message && message.rolls && message.rolls.length == 1) {
+    		console.log("MACRO: " + _MACRONAME + "() I intercepted a chat message: " + message.rolls[0]._total)	;
+    		updateActorInitiative(actor, message.rolls[0]._total)
+    		Hooks.off("renderChatMessage", myHookId);
+    	}
+	});
 }
 
 
@@ -30,15 +52,6 @@ function getSingleSelectedToken() {
 	return actor;
 }
 
-function getTargets(max = 1) {
-	// Get Target
-  	let targets = Array.from(game.user.targets)
-  	if(targets.length == 0 || targets.length > max ){
-    	console.log("MACRO: " + _MACRONAME + "() Please target at 1-" + max + " token(s)");
-    	return;
-  	}
-  	return targets;
-}
 
 //get a Talent
 function getTalentByName(actor, talentName) {
@@ -46,17 +59,6 @@ function getTalentByName(actor, talentName) {
 	console.log("MACRO: " + _MACRONAME + "() looking for talent named '" + talentName + "', found: " + talent);
 
 	return talent;
-}
-
-function spendRecoveryTest(actor, amount) {
-	actor.update({"system.recoverytestscurrent": actor.system.recoverytestscurrent-1})
-
-	if (actor.system.damage.value - amount >= 0) {
-		actor.update({"system.damage.value": actor.system.damage.value - amount})
-	} else {
-		actor.system.damage.value = 0;
-		actor.update({"system.damage.value": 0})
-	}
 }
 
 async function updateActorInitiative(actor, newInitiative) {
@@ -67,5 +69,6 @@ async function updateActorInitiative(actor, newInitiative) {
 		await matchingCombatant.update({initiative: newInitiative});
 	}
 }
+
 
 

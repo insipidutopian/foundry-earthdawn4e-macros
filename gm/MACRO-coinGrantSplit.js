@@ -30,17 +30,14 @@ if (tokens.length == 0) {
   dialogContent = `<div class="form-group"><label>No tokens selected for Coin Grant</label></div>`
   buttonLabel = `Got it`
 }
-new Dialog({
+const d = new foundry.applications.api.DialogV2({
   title:'Coin Award',
   content: dialogContent,
-  buttons:{
-    yes: {
+  buttons: [
+    {
       icon: "<i class='fas fa-check'></i>",
-      label: buttonLabel
-    }},
-  default:'yes',
-  close: html => {
-    if (tokens.length > 0) {
+      label: 'Award Coins'
+      callbac: async (_event, button) => {
         let gpAwardInput = html.find('input[name=\'goldInput\']');
         let spAwardInput = html.find('input[name=\'silverInput\']');
         let cpAwardInput = html.find('input[name=\'copperInput\']');
@@ -85,7 +82,7 @@ new Dialog({
         }
     
         if (! isNaN(gpAward) && ! isNaN(spAward) && ! isNaN(cpAward)) {
-          if (gpAward > 0 && spAward > 0 && cpAward > 0) {
+          if (gpAward > 0 || spAward > 0 || cpAward > 0) {
             let consoleLogString = "<p><strong>Coin award!</strong> (" + gpAward + " GP, " + spAward + " SP, " + cpAward + " CP)</p><p>Given to:</p><ul>";
             
             //TODO: update the award message if split flag set
@@ -113,4 +110,7 @@ new Dialog({
         }
       }
     }
-}).render(true);
+  ],
+});
+
+d.render(true);
