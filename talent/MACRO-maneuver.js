@@ -26,7 +26,7 @@ function main() {
 
 	console.log("MACRO: " + _MACRONAME + "()Selected actor has maneuver talent at rank: " + maneuverTalent.system.ranks);
 
-	//try to bring up the rollPrep dialog with the selected actor's fireblood bonus preset
+	//try to bring up the rollPrep dialog with the selected actor's maneuver bonus preset
 	const parameters = {
 		actorId: actor.id,
 		roll: 'talent',
@@ -46,7 +46,7 @@ function main() {
     			let successes = 1 + Math.floor((message.rolls[0]._total-targetedActor.actor.system.physicaldefense)/5);
 
     			//create an active Effect that lasts 1 turn that gives a closeAttack bonus of initiative diff up to the rank of deliberate assault talent 
-				let itemData = {name: `Maneuver Bonus (+${successes*2})`,
+				let itemData = {name: `Maneuver`,
 				                icon: "icons/maneuver.svg",
 				                duration: {rounds: 1},
 				                origin: actor.id,
