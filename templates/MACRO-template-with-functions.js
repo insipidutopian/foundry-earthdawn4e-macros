@@ -42,7 +42,7 @@ function getTargets(max = 1) {
 
 //get a Talent
 function getTalentByName(actor, talentName) {
-	let talent = actor.items.find((item) => item.name.toLowerCase() == talentName); 
+	let talent = actor.items.find((item) => item.name.toLowerCase() == talentName.toLowerCase()); 
 	console.log("MACRO: " + _MACRONAME + "() looking for talent named '" + talentName + "', found: " + talent);
 
 	return talent;
