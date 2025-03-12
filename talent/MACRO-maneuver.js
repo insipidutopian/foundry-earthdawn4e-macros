@@ -105,14 +105,3 @@ function getTalentByName(actor, talentName) {
 
 	return talent;
 }
-
-function spendRecoveryTest(actor, amount) {
-	actor.update({"system.recoverytestscurrent": actor.system.recoverytestscurrent-1})
-
-	if (actor.system.damage.value - amount >= 0) {
-		actor.update({"system.damage.value": actor.system.damage.value - amount})
-	} else {
-		actor.system.damage.value = 0;
-		actor.update({"system.damage.value": 0})
-	}
-}
