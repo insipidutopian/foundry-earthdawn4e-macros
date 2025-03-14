@@ -24,3 +24,8 @@ Macros for automating (within reason) various talents
 ### General Player Macros
 1. Weave thread to Item - will open a dialog showing all thread items on a selected token that can have a thread woven or upgraded to (takes into account thread weaving talent rank, threads woven, LP available, and key knowledge), and allows you to roll for the thread weaving if possible.  Then, if succussful, updates the item's threads woven, adds an entry in the LP Tracker, and spends the LP.
 2. Quarterstaff Defense - adds the +1 bonus to selected target to defense while weilding a quarterstaff and sets the token to "Defensive", or turns it off it is engaged.
+
+# Acknowledgements
+Icons made by Lorc, sbed, Cathelineau, Skoll, and Delapouite. Available on https://game-icons.net/. Game-icons.net is an online repository providing heaps of cool game related graphics. They are provided provided under the terms of the Creative Commons 3.0 BY license.
+
+
