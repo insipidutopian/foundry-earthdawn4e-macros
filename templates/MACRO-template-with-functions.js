@@ -18,9 +18,13 @@ function main() {
 }
 
 
-//function to get the selected actor from token
+//function to get the selected actor from token or the player's token
 function getSingleSelectedToken() {
-	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1){
+	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1) {
+		if (game.users.current && game.users.current.character != null) {
+			console.log("MACRO: " + _MACRONAME + "() selected current user's character's actor: " + game.users.current.character.name);
+			return game.users.current.character
+		}
     	console.log("MACRO: " + _MACRONAME + "() Please select a single token");
     	return;
   	}
@@ -49,13 +53,13 @@ function getTalentByName(actor, talentName) {
 }
 
 function spendRecoveryTest(actor, amount) {
-	actor.update({"system.recoverytestscurrent": actor.system.recoverytestscurrent-1})
+	await actor.update({"system.recoverytestscurrent": actor.system.recoverytestscurrent-1})
 
 	if (actor.system.damage.value - amount >= 0) {
-		actor.update({"system.damage.value": actor.system.damage.value - amount})
+		await actor.update({"system.damage.value": actor.system.damage.value - amount})
 	} else {
 		actor.system.damage.value = 0;
-		actor.update({"system.damage.value": 0})
+		await actor.update({"system.damage.value": 0})
 	}
 }
 

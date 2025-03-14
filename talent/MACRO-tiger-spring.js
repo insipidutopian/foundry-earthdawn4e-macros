@@ -7,7 +7,7 @@ function main() {
 		return ui.notifications.error("Please select a single token");
 	}
 
-	let tigerSpringTalent = getTalentByName(actor, 'tiger spring');
+	let tigerSpringTalent = getTalentByName(actor, _MACRONAME);
 
 	if (!tigerSpringTalent) {
 		return ui.notifications.error("Selected token actor does not have the " + _MACRONAME + " talent.");
@@ -40,9 +40,13 @@ function main() {
 }
 
 
-//function to get the selected actor from token
+//function to get the selected actor from token or the player's token
 function getSingleSelectedToken() {
-	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1){
+	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1) {
+		if (game.users.current && game.users.current.character != null) {
+			console.log("MACRO: " + _MACRONAME + "() selected current user's character's actor: " + game.users.current.character.name);
+			return game.users.current.character
+		}
     	console.log("MACRO: " + _MACRONAME + "() Please select a single token");
     	return;
   	}
@@ -55,11 +59,12 @@ function getSingleSelectedToken() {
 
 //get a Talent
 function getTalentByName(actor, talentName) {
-	let talent = actor.items.find((item) => item.name.toLowerCase() == talentName); 
+	let talent = actor.items.find((item) => item.name.toLowerCase() == talentName.toLowerCase()); 
 	console.log("MACRO: " + _MACRONAME + "() looking for talent named '" + talentName + "', found: " + talent);
 
 	return talent;
 }
+
 
 async function updateActorInitiative(actor, newInitiative) {
 	console.log("MACRO: " + _MACRONAME + "() Looking for initiative for actor id: " + actor._id);

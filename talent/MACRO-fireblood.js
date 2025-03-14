@@ -1,4 +1,4 @@
-const _MACRONAME = "Fireblood"
+const _MACRONAME = "Fire Blood"
 main()
 
 async function main() {
@@ -8,7 +8,7 @@ async function main() {
 		return ui.notifications.error("Please select a single token.");
 	}
 
-	let firebloodTalent = getTalentByName(actor, "fireblood");
+	let firebloodTalent = getTalentByName(actor, _MACRONAME);
 	if (!firebloodTalent) {
 		return ui.notifications.error("Selected token actor does not have fireblood talent.");
 	}
@@ -47,20 +47,24 @@ async function main() {
 }
 
 function spendRecoveryTest(actor, amount) {
-	actor.update({"system.recoverytestscurrent": actor.system.recoverytestscurrent-1})
+	await actor.update({"system.recoverytestscurrent": actor.system.recoverytestscurrent-1})
 
 	if (actor.system.damage.value - amount >= 0) {
-		actor.update({"system.damage.value": actor.system.damage.value - amount})
+		await actor.update({"system.damage.value": actor.system.damage.value - amount})
 	} else {
 		actor.system.damage.value = 0;
-		actor.update({"system.damage.value": 0})
+		await actor.update({"system.damage.value": 0})
 	}
 }
 
 
-//function to get the selected actor from token
+//function to get the selected actor from token or the player's token
 function getSingleSelectedToken() {
-	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1){
+	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1) {
+		if (game.users.current && game.users.current.character != null) {
+			console.log("MACRO: " + _MACRONAME + "() selected current user's character's actor: " + game.users.current.character.name);
+			return game.users.current.character
+		}
     	console.log("MACRO: " + _MACRONAME + "() Please select a single token");
     	return;
   	}
@@ -72,10 +76,11 @@ function getSingleSelectedToken() {
 
 //get a Talent
 function getTalentByName(actor, talentName) {
-	let talent = actor.items.find((item) => item.name.toLowerCase() == talentName); 
+	let talent = actor.items.find((item) => item.name.toLowerCase() == talentName.toLowerCase()); 
 	console.log("MACRO: " + _MACRONAME + "() looking for talent named '" + talentName + "', found: " + talent);
 
 	return talent;
 }
+
 
 

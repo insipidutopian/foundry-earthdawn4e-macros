@@ -54,7 +54,7 @@ function main() {
 	    								 "This causes a -" + amt + " penalty to all of " + targetActor.name + "'s rolls for 1 round."])
 
 				addActiveEffectsToActor( targetActor, 
-	    								`Taunt`,                        // Effect Name
+	    								`${_MACRONAME}`,                // Effect Name
 	    								[{ key: `system.bonuses.allRollsStep`, mode: 2, value: `${0 - amt}`, priority: null }],  // Talent Penalty
 	    								1,                              // numRounds
 	    								0,                              // numTurns
@@ -71,9 +71,13 @@ function main() {
 }
 
 
-//function to get the selected actor from token
+//function to get the selected actor from token or the player's token
 function getSingleSelectedToken() {
-	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1){
+	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1) {
+		if (game.users.current && game.users.current.character != null) {
+			console.log("MACRO: " + _MACRONAME + "() selected current user's character's actor: " + game.users.current.character.name);
+			return game.users.current.character
+		}
     	console.log("MACRO: " + _MACRONAME + "() Please select a single token");
     	return;
   	}

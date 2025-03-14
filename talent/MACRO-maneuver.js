@@ -1,4 +1,5 @@
 const _MACRONAME = "Maneuver"
+const iconFile = "icons/maneuver.svg"
 main()
 
 function main() {
@@ -19,7 +20,7 @@ function main() {
 		}
 	}
 
-	let maneuverTalent = getTalentByName(actor, "maneuver");
+	let maneuverTalent = getTalentByName(actor, _MACRONAME);
 	if (!maneuverTalent) {
 		return ui.notifications.error("Selected token actor does not have maneuver talent.");
 	}
@@ -47,7 +48,7 @@ function main() {
 
     			//create an active Effect that lasts 1 turn that gives a closeAttack bonus of initiative diff up to the rank of deliberate assault talent 
 				let itemData = {name: `Maneuver`,
-				                icon: "icons/maneuver.svg",
+				                icon: iconFile,
 				                duration: {rounds: 1},
 				                origin: actor.id,
 				                tint: "#228822",
@@ -76,9 +77,13 @@ function main() {
 }
 
 
-//function to get the selected actor from token
+//function to get the selected actor from token or the player's token
 function getSingleSelectedToken() {
-	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1){
+	if(canvas.tokens.controlled.length == 0 || canvas.tokens.controlled.length > 1) {
+		if (game.users.current && game.users.current.character != null) {
+			console.log("MACRO: " + _MACRONAME + "() selected current user's character's actor: " + game.users.current.character.name);
+			return game.users.current.character
+		}
     	console.log("MACRO: " + _MACRONAME + "() Please select a single token");
     	return;
   	}
@@ -100,8 +105,9 @@ function getTargets(min = 1, max = 1) {
 
 //get a Talent
 function getTalentByName(actor, talentName) {
-	let talent = actor.items.find((item) => item.name.toLowerCase() == talentName); 
+	let talent = actor.items.find((item) => item.name.toLowerCase() == talentName.toLowerCase()); 
 	console.log("MACRO: " + _MACRONAME + "() looking for talent named '" + talentName + "', found: " + talent);
 
 	return talent;
 }
+
