@@ -138,3 +138,53 @@ function sendChatMessage(actor, paragraphs) {
     	content: chatTemplate
 	})
 }
+
+function calculatePcEffectiveCircle(actor) {
+  if (actor.system.legendpointtotal < 800)
+    return 1;
+  else if (pc.system.legendpointtotal < 2300) 
+    return 2;
+  else if (pc.system.legendpointtotal < 7000) 
+    return 3;
+  else if (pc.system.legendpointtotal < 16500) 
+    return 4;
+  else if (pc.system.legendpointtotal < 35000) 
+    return 5;
+  else if (pc.system.legendpointtotal < 70000) 
+    return 6;
+  else if (pc.system.legendpointtotal < 132000) 
+    return 7;
+  else if (pc.system.legendpointtotal < 255000) 
+    return 8;
+else if (pc.system.legendpointtotal < 255000) 
+    return 8;
+  else //490k  922k  1695k  3175k  6050k  11.2M 
+    return 9;
+}
+
+//from https://sites.google.com/view/earthdawnwestmarches/rules ECR Rewards by Circle guidelines
+// ECR                   1    2    3    4     5      6     7    8     9     10    11    12     13     14     15
+// LP Required           0   600  2300 7000 16500   35k   70k  132k  255k  490k  922k  1695k  3175k  6050k  11.2M 
+let lpJournalAward = [0, 10,  40,  70, 110,  200,   375,  650, 950,  1950, 3450, 6200,  9200, 17000, 31000, 48000];
+let spJournalAward = [0, 37,  55,  75, 100,  125,   175,  200, 230,   260,  360,  515,  645,   900,   1030, 1285];
+
+function getLPJournalAwardForCircle(circle) {
+  if (circle && Number.isInteger(circle) && circle > 0 && circle < 16) {
+    return lpJournalAward[circle];
+  }
+
+  console.log("MACRO: " + _MACRONAME + "() Error calculating Journal LP Award for circle: `" + circle + "`.");
+  return 0;
+
+}
+
+
+function getSPJournalAwardForCircle(circle) {
+  if (circle && Number.isInteger(circle) && circle > 0 && circle < 16) {
+    return spJournalAward[circle];
+  }
+
+  console.log("MACRO: " + _MACRONAME + "() Error calculating Journal SP Award for circle: `" + circle + "`.");
+  return 0;
+
+}
